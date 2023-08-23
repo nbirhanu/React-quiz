@@ -28,6 +28,7 @@ function reducer(state, action) {
 			throw new Error('action unknown')
 	}
 }
+//
 
 function App() {
 	const [{ questions, status }, dispatch] = useReducer(reducer, intialState)
