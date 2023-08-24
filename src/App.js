@@ -5,11 +5,13 @@ import Main from './components/Main'
 import Loader from './components/Loader'
 import Error from './components/Error'
 import StartScreen from './components/StartScreen'
+import Questions from './components/Question'
 //
 const intialState = {
 	questions: [],
 	//loading, error, ready , active, finished
 	status: 'loading',
+	index: 0,
 }
 function reducer(state, action) {
 	switch (action.type) {
@@ -24,6 +26,11 @@ function reducer(state, action) {
 				...state,
 				status: 'error',
 			}
+		case 'start':
+			return {
+				...state,
+				status: 'active',
+			}
 		default:
 			throw new Error('action unknown')
 	}
@@ -31,7 +38,8 @@ function reducer(state, action) {
 //
 
 function App() {
-	const [{ questions, status }, dispatch] = useReducer(reducer, intialState)
+	const [{ questions, status, index }, dispatch] = useReducer(reducer, intialState)
+
 	const numOfQuestion = questions.length
 	useEffect(function () {
 		fetch('http://localhost:9000/questions')
@@ -45,7 +53,8 @@ function App() {
 			<Main>
 				{status === 'loading' && <Loader />}
 				{status === 'error' && <Error />}
-				{status === 'ready' && <StartScreen numOfQuestion={numOfQuestion} />}
+				{status === 'ready' && <StartScreen numOfQuestion={numOfQuestion} dispatch={dispatch} />}
+				{status === 'active' && <Questions question={questions[index]} />}
 			</Main>
 		</div>
 	)
